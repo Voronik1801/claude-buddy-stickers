@@ -29,12 +29,13 @@ Each species has its own emotions. A Goose gets `honk`, `steal`, `chase`. A Cat 
 
 ```bash
 # One command — installs the plugin with skill, scripts, and hooks
-/plugin add Voronik1801/claude-buddy-stickers
+/install Voronik1801/claude-buddy-stickers
 ```
 
 Or install from marketplace:
 ```bash
-/plugin marketplace add Voronik1801/claude-buddy-stickers
+# Or from marketplace
+/install Voronik1801/claude-buddy-stickers
 ```
 
 On first enable, Claude Code will prompt you for:
@@ -46,7 +47,7 @@ On first enable, Claude Code will prompt you for:
 
 Just say:
 ```
-/buddy stickers
+/sticker-pack
 ```
 
 Or use the script directly:
