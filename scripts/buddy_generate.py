@@ -576,6 +576,14 @@ def generate_image(base_style: str, emotion_prompt: str) -> bytes:
         print("ERROR: All providers failed. Set OPENROUTER_API_KEY or GEMINI_API_KEY.", file=sys.stderr)
         sys.exit(1)
 
+    # Remove background using rembg (ML-based, preserves character internals)
+    try:
+        from rembg import remove as rembg_remove
+        result = rembg_remove(result)
+        print("  Background removed (rembg)")
+    except ImportError:
+        print("  WARN: rembg not installed, background may not be transparent. pip install rembg", file=sys.stderr)
+
     return result
 
 
@@ -786,7 +794,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate buddy stickers from ~/.claude.json")
     parser.add_argument("emotion", nargs="?", default=None,
                         help="Preset emotion, custom prompt, or 'all'")
-    parser.add_argument("--chat", default="", help="Telegram chat to send stickers to")
+    parser.add_argument("--chat", default="""", help="Telegram chat")
     parser.add_argument("--no-send", action="store_true", help="Only save locally")
     parser.add_argument("--all", action="store_true", help="Generate all presets")
     parser.add_argument("--info", action="store_true", help="Print buddy info and exit")
