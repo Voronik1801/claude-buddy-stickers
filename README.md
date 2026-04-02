@@ -1,6 +1,6 @@
 # Claude Buddy Stickers
 
-> Turn your Claude Code buddy into a Telegram sticker pack. Every species. Every emotion. Automatically.
+> Turn your Claude Code buddy into a Telegram sticker pack. One command. Every species. Every emotion.
 
 <p align="center">
   <img src="examples/zen.png" width="120" />
@@ -13,114 +13,171 @@
 
 ## What is this?
 
-Claude Code has a companion system — a tiny ASCII pet called a **buddy** that lives in your terminal. This plugin reads your buddy's species, personality, rarity, and stats from `~/.claude.json`, then:
+Claude Code has a **buddy** — a tiny ASCII pet in your terminal. It has a species, personality, stats, and rarity.
 
-1. Generates **12 unique emotion stickers** tailored to your buddy's species
-2. Removes backgrounds automatically (transparent PNG)
-3. Creates a **Telegram sticker pack** you can use in any chat
+This tool reads your buddy from `~/.claude.json` and generates a **Telegram sticker pack** with 12 emotions unique to your buddy's species.
 
-**18 species supported**: Duck, Goose, Cat, Rabbit, Owl, Penguin, Turtle, Snail, Dragon, Octopus, Axolotl, Ghost, Robot, Blob, Cactus, Mushroom, Chonk, Capybara.
+A Goose gets `honk`, `steal`, `chase`. A Cat gets `loaf`, `zoomies`, `knock`. A Chonk gets `zen`, `vibrate`, `meditate`. **18 species supported.**
 
-Each species has its own emotions. A Goose gets `honk`, `steal`, `chase`. A Cat gets `loaf`, `zoomies`, `knock`. A Chonk gets `zen`, `vibrate`, `meditate`.
+---
 
-## Install
+## Setup (5 minutes)
 
-### Clone and copy to your project
+### Step 1. Clone this repo
 
 ```bash
 git clone https://github.com/Voronik1801/claude-buddy-stickers.git
 cd claude-buddy-stickers
+```
+
+### Step 2. Install Python dependencies
+
+```bash
 pip install httpx telethon Pillow
 ```
 
-Copy skill and scripts to your Claude Code project:
+### Step 3. Get an OpenRouter API key (free)
+
+1. Go to [openrouter.ai](https://openrouter.ai) and sign up — you get **$5 free credit**
+2. Copy your API key from [openrouter.ai/keys](https://openrouter.ai/keys)
+
+### Step 4. Check your buddy
 
 ```bash
-# Skill (enables /buddy-stickers:sticker-pack command)
-mkdir -p .claude/skills/sticker-pack
-cp skills/sticker-pack/SKILL.md .claude/skills/sticker-pack/
+export OPENROUTER_API_KEY="sk-or-v1-your-key-here"
+python3 scripts/buddy_generate.py --info
+```
 
-# Scripts
-mkdir -p .claude/scripts
+You'll see something like:
+```
+Name: Wobble
+Species: chonk
+Emotions (12): zen, bug, sarcasm, chaos, approve, vibrate, meditate, deadline, facepalm, sleep, itworks, hug
+```
+
+### Step 5. Generate your stickers
+
+```bash
+python3 scripts/buddy_generate.py --all --no-send
+```
+
+Done! Your stickers are in `~/.claude/buddy-stickers/<buddy-name>/`.
+
+---
+
+## Create a Telegram Sticker Pack (optional)
+
+Want a real Telegram sticker pack you can share?
+
+### Step 1. Create a Telegram bot
+
+1. Open [@BotFather](https://t.me/BotFather) in Telegram
+2. Send `/newbot`, follow the prompts
+3. Copy the bot token (looks like `123456789:ABCdef...`)
+4. **Important:** Open your new bot and press `/start`
+
+### Step 2. Set up Telegram MTProto (one-time)
+
+The script needs your Telegram account to create sticker packs:
+
+1. Go to [my.telegram.org](https://my.telegram.org) → API Development Tools
+2. Get your `API_ID` and `API_HASH`
+3. Create a session:
+
+```bash
+mkdir -p ~/.claude/scripts/telegram-mcp
+cat > ~/.claude/scripts/telegram-mcp/.env << EOF
+TELEGRAM_API_ID=your_api_id
+TELEGRAM_API_HASH=your_api_hash
+EOF
+
+python3 -c "
+from telethon import TelegramClient
+client = TelegramClient(
+    '~/.claude/scripts/telegram-mcp/session',
+    your_api_id,
+    'your_api_hash'
+)
+client.start()  # Enter phone number and code when prompted
+client.disconnect()
+"
+```
+
+### Step 3. Generate stickers + create pack
+
+```bash
+export OPENROUTER_API_KEY="sk-or-v1-your-key"
+export TELEGRAM_BOT_TOKEN="123456789:ABCdef..."
+
+python3 scripts/buddy_generate.py --all --sticker-pack
+```
+
+You'll get a link like `https://t.me/addstickers/your_buddy_by_your_bot` — share it with anyone!
+
+---
+
+## Use as Claude Code Skill
+
+Copy to your project so you can just ask Claude "generate stickers for my buddy":
+
+```bash
+mkdir -p .claude/skills/sticker-pack .claude/scripts
+
+cp skills/sticker-pack/SKILL.md .claude/skills/sticker-pack/
 cp scripts/buddy_generate.py .claude/scripts/
 cp scripts/buddy_react.py .claude/scripts/
 ```
 
-Set your API keys in `.claude/settings.local.json`:
+Add API keys to `.claude/settings.local.json`:
 ```json
 {
   "env": {
-    "OPENROUTER_API_KEY": "sk-or-v1-your-key-here",
-    "TELEGRAM_BOT_TOKEN": "123456:ABC-your-token"
+    "OPENROUTER_API_KEY": "sk-or-v1-your-key",
+    "TELEGRAM_BOT_TOKEN": "123456789:ABCdef..."
   }
 }
 ```
 
-Get keys:
-- **OpenRouter** — [openrouter.ai](https://openrouter.ai) (free $5 credit on signup)
-- **Telegram Bot** — [@BotFather](https://t.me/BotFather) (optional, for sticker packs)
+Then in Claude Code, just say: **"generate stickers for my buddy"** or **"make a sticker pack"**.
 
-## Usage
+---
 
-### Via Claude Code skill
+## Buddy Reactions (bonus)
 
-```
-/buddy-stickers:sticker-pack
-```
+Your buddy can react with stickers when things happen in your code:
 
-Or just ask Claude: "generate stickers for my buddy"
+| What happened | Buddy sends |
+|---------------|------------|
+| Tests passed | 👍 approve |
+| Build failed | 🤦 facepalm |
+| Error/exception | 🐛 bug |
+| Deploy to prod | 🔥 chaos |
+| Installing deps | ✨ meditate |
+| Timeout | ⏰ deadline |
 
-### Via CLI
+Add to your `.claude/settings.local.json` hooks:
 
-```bash
-# See your buddy's species, stats, and available emotions
-python3 scripts/buddy_generate.py --info
-
-# List all emotions for your buddy's species
-python3 scripts/buddy_generate.py --list
-
-# Generate one sticker (saves to ~/.claude/buddy-stickers/<name>/)
-OPENROUTER_API_KEY="..." python3 scripts/buddy_generate.py zen --no-send
-
-# Generate all 12 emotions
-OPENROUTER_API_KEY="..." python3 scripts/buddy_generate.py --all --no-send
-
-# Generate all + create Telegram sticker pack
-OPENROUTER_API_KEY="..." TELEGRAM_BOT_TOKEN="..." python3 scripts/buddy_generate.py --all --sticker-pack
-
-# Custom pose (not a preset)
-OPENROUTER_API_KEY="..." python3 scripts/buddy_generate.py "wearing a pirate hat on a treasure chest" --no-send
+```json
+{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Bash",
+      "hooks": [{
+        "type": "command",
+        "command": "python3 .claude/scripts/buddy_react.py",
+        "timeout": 10
+      }]
+    }]
+  }
+}
 ```
 
-## Buddy Reactions
+---
 
-Your buddy can **react with stickers** in Telegram when things happen in your coding session. This is enabled automatically via the plugin's `hooks.json`:
-
-| Event | Sticker |
-|-------|---------|
-| Tests passed | approve 👍 |
-| Build failed | facepalm 🤦 |
-| Error/exception | bug 🐛 |
-| Deploy to prod | chaos 🔥 |
-| Installing deps | meditate ✨ |
-| Timeout | deadline ⏰ |
-
-Requires `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in env.
-
-## Prerequisites
-
-| Requirement | What | How to get |
-|------------|------|-----------|
-| **OpenRouter API** | Image generation | [openrouter.ai](https://openrouter.ai) — free $5 signup credit |
-| **Telegram Bot** | Sticker pack creation | [@BotFather](https://t.me/BotFather) — optional |
-| **Telegram MTProto** | Sending stickers to chat | [my.telegram.org](https://my.telegram.org) + Telethon session — optional |
-| **Python 3.10+** | Runtime | `python3 --version` |
-| **httpx, telethon, Pillow** | Dependencies | `pip install httpx telethon Pillow` |
-
-## Species & Emotions
+## All 18 Species
 
 <details>
-<summary>All 18 species and their 12 unique emotions</summary>
+<summary>Click to see species and their unique emotions</summary>
 
 | Species | Emotions |
 |---------|----------|
@@ -157,49 +214,20 @@ Sticker style adapts to your buddy's rarity and stats:
 | Epic | Purple shimmer |
 | Legendary | Golden celestial aura |
 
-Stats above 70 add visual bonuses: Debugging (detective hat), Patience (zen lines), Chaos (glitch particles), Wisdom (halo), Snark (raised eyebrow).
-
-Shiny buddies get rainbow shimmer. Hats are rendered on the character.
+Stats > 70 add bonuses: Debugging (detective hat), Patience (zen lines), Chaos (glitch), Wisdom (halo), Snark (raised eyebrow). Shiny buddies get rainbow shimmer.
 
 ## How It Works
 
 ```
-~/.claude.json           scripts/                    Telegram
+~/.claude.json           buddy_generate.py           Telegram
 ┌──────────┐     ┌─────────────────────┐     ┌──────────────┐
-│companion:│     │ 1. Detect species   │     │ Sticker Pack │
-│  name    │────>│ 2. Pick 12 emotions │────>│ 12 stickers  │
-│  personality   │ 3. Generate via AI  │     │ with emojis  │
-│  stats   │     │ 4. Remove bg        │     │              │
-│  rarity  │     │ 5. Resize to 512px  │     │ t.me/add...  │
-└──────────┘     └─────────────────────┘     └──────────────┘
+│ name     │     │ 1. Detect species   │     │ Sticker Pack │
+│ personality ──>│ 2. Pick 12 emotions │────>│ 12 stickers  │
+│ stats    │     │ 3. Generate via AI  │     │ + emojis     │
+│ rarity   │     │ 4. Remove background│     │              │
+└──────────┘     │ 5. Resize to 512px  │     │ t.me/add...  │
+                 └─────────────────────┘     └──────────────┘
 ```
-
-## Plugin Structure
-
-```
-claude-buddy-stickers/
-├── .claude-plugin/
-│   ├── plugin.json            # Plugin manifest with userConfig
-│   └── marketplace.json       # Marketplace metadata
-├── skills/
-│   └── sticker-pack/
-│       └── SKILL.md           # Skill: /buddy-stickers:sticker-pack
-├── scripts/
-│   ├── buddy_generate.py      # Image generation + sticker pack creation
-│   └── buddy_react.py         # Sticker reactions on code events
-├── hooks/
-│   └── hooks.json             # PostToolUse hook for buddy reactions
-├── examples/                  # Sample stickers (Chonk species)
-├── LICENSE                    # MIT
-└── README.md
-```
-
-## Made with
-
-- [Claude Code](https://claude.ai/code) — AI coding assistant with companion system
-- [OpenRouter](https://openrouter.ai) — unified API for AI models (Gemini image generation)
-- [Telethon](https://github.com/LonamiWebs/Telethon) — Telegram MTProto client
-- [Telegram Bot API](https://core.telegram.org/stickers) — sticker pack management
 
 ## License
 
@@ -207,4 +235,4 @@ MIT
 
 ---
 
-*Your buddy is watching. It probably has opinions about your code. Now it can express them as stickers.*
+*Your buddy is watching. It has opinions about your code. Now it can express them as stickers.*
