@@ -26,19 +26,16 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash-exp-image-generation")
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
 
-# Reads from plugin userConfig env vars (CLAUDE_PLUGIN_OPTION_*) or direct env
-OPENROUTER_API_KEY = os.environ.get("CLAUDE_PLUGIN_OPTION_OPENROUTER_API_KEY", os.environ.get("OPENROUTER_API_KEY", ""))
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "google/gemini-2.5-flash-image")
 
-TELEGRAM_BOT_TOKEN = os.environ.get("CLAUDE_PLUGIN_OPTION_TELEGRAM_BOT_TOKEN", os.environ.get("TELEGRAM_BOT_TOKEN", ""))
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 
 TELEGRAM_SESSION = os.path.expanduser("~/.claude/scripts/telegram-mcp/session")
 TELEGRAM_ENV = os.path.expanduser("~/.claude/scripts/telegram-mcp/.env")
 CLAUDE_JSON = os.path.expanduser("~/.claude.json")
 
-# Use plugin data dir if available, otherwise fallback
-PLUGIN_DATA = os.environ.get("CLAUDE_PLUGIN_DATA", "")
-OUTPUT_DIR = Path(PLUGIN_DATA) / "stickers" if PLUGIN_DATA else Path(os.environ.get("BUDDY_OUTPUT_DIR", os.path.expanduser("~/.claude/buddy-stickers")))
+OUTPUT_DIR = Path(os.environ.get("BUDDY_OUTPUT_DIR", os.path.expanduser("~/POS/output/buddy-stickers")))
 
 # ============================================================
 # Species visual descriptions → consistent image generation
@@ -60,7 +57,7 @@ SPECIES_VISUALS = {
     "blob":      "small cute round amorphous blob character, gelatinous, semi-transparent, jiggly",
     "cactus":    "small cute round cactus character, tiny spines, flower on top, green",
     "mushroom":  "small cute round mushroom character, spotted cap, tiny stem, forest vibes",
-    "chonk":     "small absurdly chubby round mochi blob character in soft warm peach-pink color (like a blushing mochi), impossibly soft and squishy, tiny stubby limbs too small for its body, maximum roundness, derpy half-closed eyes with Buddhist acceptance expression, slightly vibrating, goofy and endearing, BOLD THICK BLACK OUTLINE around entire body",
+    "chonk":     "small absurdly chubby round mochi blob character in soft warm peach-pink color (like a blushing mochi), impossibly soft and squishy, tiny stubby limbs too small for its body, maximum roundness, derpy half-closed eyes with Buddhist acceptance expression, slightly vibrating, goofy and endearing, bold thick outline around entire body",
     "capybara":  "small cute round capybara character, chill expression, brown fur, tiny ears, zen master vibes",
 }
 
@@ -435,10 +432,11 @@ def build_visual_prompt(companion: dict) -> str:
     prompt = (
         f"Character: {name}. {rarity_mod}{shiny_mod}{hat_mod}{stat_mods}"
         f"{visual}. "
-        f"BOLD THICK BLACK OUTLINE around entire character (like a coloring book), "
-        f"TRANSPARENT BACKGROUND, NO background at all, sticker design, "
-        f"kawaii minimal style, flat colors, clean vector look, "
-        f"strong black border around every shape, isolated character only."
+        f"Bold thick outline around entire character (outline can be black or dark colored), "
+        f"sticker design on TRANSPARENT BACKGROUND (checkerboard pattern = transparency), "
+        f"NO solid background color behind character, character floats on empty/transparent space, "
+        f"kawaii minimal style, flat colors, clean vector look, isolated character only, "
+        f"PNG sticker with alpha transparency."
     )
     return prompt, species
 
@@ -564,34 +562,8 @@ def _generate_via_gemini(prompt: str) -> bytes | None:
     return None
 
 
-def _remove_background(image_bytes: bytes) -> bytes:
-    """Remove white/light background, make it transparent."""
-    from PIL import Image
-    from io import BytesIO
-
-    img = Image.open(BytesIO(image_bytes)).convert("RGBA")
-    pixels = img.load()
-    w, h = img.size
-
-    for y in range(h):
-        for x in range(w):
-            r, g, b, a = pixels[x, y]
-            # Make white and near-white pixels transparent
-            if r > 230 and g > 230 and b > 230:
-                pixels[x, y] = (r, g, b, 0)
-            # Also handle light gray
-            elif r > 210 and g > 210 and b > 210:
-                # Semi-transparent for anti-aliasing
-                alpha = int((255 - max(r, g, b)) * 255 / 45)
-                pixels[x, y] = (r, g, b, min(alpha, a))
-
-    buf = BytesIO()
-    img.save(buf, format="PNG")
-    return buf.getvalue()
-
-
 def generate_image(base_style: str, emotion_prompt: str) -> bytes:
-    """Generate image trying OpenRouter first, then Gemini direct. Removes background."""
+    """Generate image trying OpenRouter first, then Gemini direct."""
     full_prompt = f"{base_style} Pose/emotion: {emotion_prompt}"
 
     # Try OpenRouter first (no geo-restrictions)
@@ -604,8 +576,6 @@ def generate_image(base_style: str, emotion_prompt: str) -> bytes:
         print("ERROR: All providers failed. Set OPENROUTER_API_KEY or GEMINI_API_KEY.", file=sys.stderr)
         sys.exit(1)
 
-    # Remove background automatically
-    result = _remove_background(result)
     return result
 
 
