@@ -28,7 +28,7 @@ Each species has its own emotions. A Goose gets `honk`, `steal`, `chase`. A Cat 
 ### As Claude Code Plugin
 
 ```
-/install Voronik1801/claude-buddy-stickers
+claude plugin add github:Voronik1801/claude-buddy-stickers
 ```
 
 On first enable, Claude Code will prompt you for:
