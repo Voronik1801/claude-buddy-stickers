@@ -816,7 +816,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate buddy stickers from ~/.claude.json")
     parser.add_argument("emotion", nargs="?", default=None,
                         help="Preset emotion, custom prompt, or 'all'")
-    parser.add_argument("--chat", default="@claris_voronka_bot", help="Telegram chat")
+    parser.add_argument("--chat", default="", help="Telegram chat to send stickers to")
     parser.add_argument("--no-send", action="store_true", help="Only save locally")
     parser.add_argument("--all", action="store_true", help="Generate all presets")
     parser.add_argument("--info", action="store_true", help="Print buddy info and exit")

@@ -151,9 +151,7 @@ The `buddy_react.py` script analyzes tool output and sends the appropriate buddy
 
 ## Author
 
-**Daria Voronkina** — [@aishipuchka](https://t.me/aishipuchka)
-
-Building AI systems, personal OS, and making terminal pets into sticker packs.
+**Voronik1801** — [GitHub](https://github.com/Voronik1801)
 
 ---
 
