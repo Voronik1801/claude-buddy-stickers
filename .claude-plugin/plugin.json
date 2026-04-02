@@ -1,47 +1,38 @@
 {
   "name": "buddy-stickers",
   "version": "1.0.0",
-  "description": "Generate personalized Telegram sticker packs for your Claude Code buddy. 18 species x 12 unique emotions. Auto-creates sticker packs with bold outlines and transparent backgrounds.",
-  "author": "Daria Voronkina (@aishipuchka)",
+  "description": "Generate personalized Telegram sticker packs for your Claude Code buddy. 18 species x 12 unique emotions. Bold outlines, transparent backgrounds, auto-created sticker packs.",
+  "author": {
+    "name": "Daria Voronkina",
+    "url": "https://t.me/aishipuchka"
+  },
   "homepage": "https://github.com/Voronik1801/claude-buddy-stickers",
   "repository": "https://github.com/Voronik1801/claude-buddy-stickers",
   "license": "MIT",
-  "strict": false,
-  "skills": {
-    "buddy": {
-      "path": "SKILL.md",
-      "description": "Generate Telegram sticker packs for your Claude Code buddy"
-    }
-  },
-  "scripts": {
-    "buddy_generate": {
-      "path": "buddy_generate.py",
-      "description": "Main sticker generation script"
+  "keywords": [
+    "buddy",
+    "companion",
+    "stickers",
+    "telegram",
+    "creative",
+    "fun",
+    "sticker-pack",
+    "ascii-pet"
+  ],
+  "skills": "./skills",
+  "hooks": "./hooks/hooks.json",
+  "userConfig": {
+    "openrouter_api_key": {
+      "description": "OpenRouter API key for image generation. Sign up at https://openrouter.ai (free $5 credit)",
+      "sensitive": true
     },
-    "buddy_react": {
-      "path": "buddy_react.py",
-      "description": "Buddy sticker reactions for PostToolUse hooks"
-    }
-  },
-  "requirements": {
-    "python": ">=3.10",
-    "pip": ["httpx", "telethon", "Pillow"],
-    "env": {
-      "OPENROUTER_API_KEY": {
-        "description": "OpenRouter API key for image generation (sign up at openrouter.ai — free $5 credit)",
-        "required": true
-      },
-      "TELEGRAM_BOT_TOKEN": {
-        "description": "Telegram Bot token from @BotFather (for creating sticker packs)",
-        "required": false
-      }
+    "telegram_bot_token": {
+      "description": "Telegram Bot token from @BotFather (for creating sticker packs). Optional — skip if you only want local PNG files",
+      "sensitive": true
     },
-    "services": {
-      "telegram-mtproto": {
-        "description": "Telethon session at ~/.claude/scripts/telegram-mcp/ for sending stickers. Get API credentials at my.telegram.org",
-        "required": false
-      }
+    "telegram_chat": {
+      "description": "Telegram chat/bot to send stickers to (e.g. @your_bot). Optional",
+      "sensitive": false
     }
-  },
-  "tags": ["creative", "telegram", "stickers", "companion", "fun", "buddy"]
+  }
 }

@@ -25,37 +25,31 @@ Each species has its own emotions. A Goose gets `honk`, `steal`, `chase`. A Cat 
 
 ## Quick Start
 
-### 1. Install
-
-Copy `SKILL.md` and `buddy_generate.py` to your Claude Code skills directory:
+### 1. Install as Claude Code Plugin
 
 ```bash
-# Clone
-git clone https://github.com/Voronik1801/claude-buddy-stickers.git
-
-# Copy to your Claude Code project
-mkdir -p .claude/skills/buddy
-cp claude-buddy-stickers/SKILL.md .claude/skills/buddy/
-cp claude-buddy-stickers/buddy_generate.py .claude/scripts/
+# One command — installs the plugin with skill, scripts, and hooks
+/plugin add Voronik1801/claude-buddy-stickers
 ```
 
-Or just tell Claude Code:
+Or install from marketplace:
+```bash
+/plugin marketplace add Voronik1801/claude-buddy-stickers
+```
+
+On first enable, Claude Code will prompt you for:
+- **OpenRouter API key** — for image generation ([openrouter.ai](https://openrouter.ai), free $5 credit)
+- **Telegram Bot token** — for creating sticker packs (optional, from [@BotFather](https://t.me/BotFather))
+- **Telegram chat** — where to send stickers (optional)
+
+### 2. Generate your sticker pack
+
+Just say:
 ```
 /buddy stickers
 ```
 
-### 2. Set up credentials
-
-```bash
-# Image generation (sign up at openrouter.ai — free $5 credit)
-export OPENROUTER_API_KEY="sk-or-v1-..."
-
-# Telegram sticker pack creation (get from @BotFather)
-export TELEGRAM_BOT_TOKEN="123456:ABC-..."
-```
-
-### 3. Generate your sticker pack
-
+Or use the script directly:
 ```bash
 # See your buddy
 python3 buddy_generate.py --info

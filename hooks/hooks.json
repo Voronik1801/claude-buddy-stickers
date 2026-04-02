@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/buddy_react.py",
+            "timeout": 10,
+            "statusMessage": "Buddy is watching..."
+          }
+        ]
+      }
+    ]
+  }
+}

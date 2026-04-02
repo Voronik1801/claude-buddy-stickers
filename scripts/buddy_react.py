@@ -29,8 +29,9 @@ try:
 except ImportError:
     sys.exit(0)  # silently skip if not installed
 
-TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
-TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
+# Reads from plugin userConfig env vars (CLAUDE_PLUGIN_OPTION_*) or direct env
+TELEGRAM_BOT_TOKEN = os.environ.get("CLAUDE_PLUGIN_OPTION_TELEGRAM_BOT_TOKEN", os.environ.get("TELEGRAM_BOT_TOKEN", ""))
+TELEGRAM_CHAT_ID = os.environ.get("CLAUDE_PLUGIN_OPTION_TELEGRAM_CHAT", os.environ.get("TELEGRAM_CHAT_ID", ""))
 BUDDY_STICKER_PACK = os.environ.get("BUDDY_STICKER_PACK", "")
 
 # Keywords in tool output → emotion mapping

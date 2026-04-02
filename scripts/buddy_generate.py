@@ -26,16 +26,19 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash-exp-image-generation")
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
 
-OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
+# Reads from plugin userConfig env vars (CLAUDE_PLUGIN_OPTION_*) or direct env
+OPENROUTER_API_KEY = os.environ.get("CLAUDE_PLUGIN_OPTION_OPENROUTER_API_KEY", os.environ.get("OPENROUTER_API_KEY", ""))
 OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "google/gemini-2.5-flash-image")
 
-TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_BOT_TOKEN = os.environ.get("CLAUDE_PLUGIN_OPTION_TELEGRAM_BOT_TOKEN", os.environ.get("TELEGRAM_BOT_TOKEN", ""))
 
 TELEGRAM_SESSION = os.path.expanduser("~/.claude/scripts/telegram-mcp/session")
 TELEGRAM_ENV = os.path.expanduser("~/.claude/scripts/telegram-mcp/.env")
 CLAUDE_JSON = os.path.expanduser("~/.claude.json")
 
-OUTPUT_DIR = Path(os.environ.get("BUDDY_OUTPUT_DIR", os.path.expanduser("~/POS/output/buddy-stickers")))
+# Use plugin data dir if available, otherwise fallback
+PLUGIN_DATA = os.environ.get("CLAUDE_PLUGIN_DATA", "")
+OUTPUT_DIR = Path(PLUGIN_DATA) / "stickers" if PLUGIN_DATA else Path(os.environ.get("BUDDY_OUTPUT_DIR", os.path.expanduser("~/.claude/buddy-stickers")))
 
 # ============================================================
 # Species visual descriptions → consistent image generation
