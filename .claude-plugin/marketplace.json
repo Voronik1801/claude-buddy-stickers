@@ -3,24 +3,13 @@
   "owner": {
     "name": "Voronik1801"
   },
-  "metadata": {
-    "description": "Buddy Stickers — turn your Claude Code companion into a Telegram sticker pack",
-    "version": "1.0.0"
-  },
-  "plugins": [
-    {
-      "name": "buddy-stickers",
+  "plugins": {
+    "buddy-stickers": {
+      "source": ".",
       "description": "Generate personalized Telegram sticker packs for your Claude Code buddy. 18 species x 12 unique emotions.",
-      "source": {
-        "source": "github",
-        "repo": "Voronik1801/claude-buddy-stickers",
-        "ref": "main"
-      },
-      "homepage": "https://github.com/Voronik1801/claude-buddy-stickers",
+      "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["buddy", "companion", "stickers", "telegram", "creative"],
-      "category": "creative",
-      "tags": ["sticker-pack", "telegram", "companion"]
+      "keywords": ["buddy", "companion", "stickers", "telegram", "creative"]
     }
-  ]
+  }
 }
