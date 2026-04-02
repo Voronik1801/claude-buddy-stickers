@@ -1,0 +1,47 @@
+{
+  "name": "buddy-stickers",
+  "version": "1.0.0",
+  "description": "Generate personalized Telegram sticker packs for your Claude Code buddy. 18 species x 12 unique emotions. Auto-creates sticker packs with bold outlines and transparent backgrounds.",
+  "author": "Daria Voronkina (@aishipuchka)",
+  "homepage": "https://github.com/Voronik1801/claude-buddy-stickers",
+  "repository": "https://github.com/Voronik1801/claude-buddy-stickers",
+  "license": "MIT",
+  "strict": false,
+  "skills": {
+    "buddy": {
+      "path": "SKILL.md",
+      "description": "Generate Telegram sticker packs for your Claude Code buddy"
+    }
+  },
+  "scripts": {
+    "buddy_generate": {
+      "path": "buddy_generate.py",
+      "description": "Main sticker generation script"
+    },
+    "buddy_react": {
+      "path": "buddy_react.py",
+      "description": "Buddy sticker reactions for PostToolUse hooks"
+    }
+  },
+  "requirements": {
+    "python": ">=3.10",
+    "pip": ["httpx", "telethon", "Pillow"],
+    "env": {
+      "OPENROUTER_API_KEY": {
+        "description": "OpenRouter API key for image generation (sign up at openrouter.ai — free $5 credit)",
+        "required": true
+      },
+      "TELEGRAM_BOT_TOKEN": {
+        "description": "Telegram Bot token from @BotFather (for creating sticker packs)",
+        "required": false
+      }
+    },
+    "services": {
+      "telegram-mtproto": {
+        "description": "Telethon session at ~/.claude/scripts/telegram-mcp/ for sending stickers. Get API credentials at my.telegram.org",
+        "required": false
+      }
+    }
+  },
+  "tags": ["creative", "telegram", "stickers", "companion", "fun", "buddy"]
+}

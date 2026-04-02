@@ -1,0 +1,14 @@
+{
+  "plugins": [
+    {
+      "name": "buddy-stickers",
+      "description": "Generate personalized Telegram sticker packs for your Claude Code buddy. 18 species x 12 unique emotions.",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/Voronik1801/claude-buddy-stickers.git",
+        "ref": "main"
+      },
+      "homepage": "https://github.com/Voronik1801/claude-buddy-stickers"
+    }
+  ]
+}
