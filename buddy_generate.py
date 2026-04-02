@@ -57,7 +57,7 @@ SPECIES_VISUALS = {
     "blob":      "small cute round amorphous blob character, gelatinous, semi-transparent, jiggly",
     "cactus":    "small cute round cactus character, tiny spines, flower on top, green",
     "mushroom":  "small cute round mushroom character, spotted cap, tiny stem, forest vibes",
-    "chonk":     "small absurdly chubby round mochi blob character in soft warm peach-pink color (like a slightly blushing mochi), impossibly soft and squishy, tiny stubby limbs too small for its body, maximum roundness, derpy half-closed eyes with Buddhist acceptance expression, slightly vibrating, goofy and endearing. TRANSPARENT BACKGROUND, NO background at all, character only, PNG sticker with transparency",
+    "chonk":     "small absurdly chubby round mochi blob character in soft warm peach-pink color (like a blushing mochi), impossibly soft and squishy, tiny stubby limbs too small for its body, maximum roundness, derpy half-closed eyes with Buddhist acceptance expression, slightly vibrating, goofy and endearing, BOLD THICK BLACK OUTLINE around entire body",
     "capybara":  "small cute round capybara character, chill expression, brown fur, tiny ears, zen master vibes",
 }
 
@@ -432,9 +432,10 @@ def build_visual_prompt(companion: dict) -> str:
     prompt = (
         f"Character: {name}. {rarity_mod}{shiny_mod}{hat_mod}{stat_mods}"
         f"{visual}. "
-        f"Thick black outline, TRANSPARENT BACKGROUND, NO background, sticker design, "
+        f"BOLD THICK BLACK OUTLINE around entire character (like a coloring book), "
+        f"TRANSPARENT BACKGROUND, NO background at all, sticker design, "
         f"kawaii minimal style, flat colors, clean vector look, "
-        f"isolated character on transparent/empty background, PNG sticker."
+        f"strong black border around every shape, isolated character only."
     )
     return prompt, species
 
