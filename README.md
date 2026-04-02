@@ -21,47 +21,74 @@ A Goose gets `honk`, `steal`, `chase`. A Cat gets `loaf`, `zoomies`, `knock`. A 
 
 ---
 
-## Setup (5 minutes)
+## Install
 
-### Step 1. Clone this repo
+### Option A: One-liner (recommended)
+
+Run in your project directory:
+
+```bash
+curl -sL https://raw.githubusercontent.com/Voronik1801/claude-buddy-stickers/main/install.sh | bash
+```
+
+This copies the skill and scripts to `.claude/` and installs Python deps.
+
+### Option B: Tell Claude Code
+
+Just paste this into Claude Code:
+
+> Install buddy stickers from https://github.com/Voronik1801/claude-buddy-stickers — clone the repo, copy SKILL.md to .claude/skills/sticker-pack/, copy scripts to .claude/scripts/, install httpx telethon Pillow
+
+Claude will do everything automatically.
+
+### Option C: Manual
 
 ```bash
 git clone https://github.com/Voronik1801/claude-buddy-stickers.git
 cd claude-buddy-stickers
-```
-
-### Step 2. Install Python dependencies
-
-```bash
 pip install httpx telethon Pillow
+
+mkdir -p .claude/skills/sticker-pack .claude/scripts
+cp skills/sticker-pack/SKILL.md .claude/skills/sticker-pack/
+cp scripts/buddy_generate.py .claude/scripts/
+cp scripts/buddy_react.py .claude/scripts/
 ```
 
-### Step 3. Get an OpenRouter API key (free)
+---
 
-1. Go to [openrouter.ai](https://openrouter.ai) and sign up — you get **$5 free credit**
-2. Copy your API key from [openrouter.ai/keys](https://openrouter.ai/keys)
+## Setup API Key (2 minutes)
 
-### Step 4. Check your buddy
+1. Go to [openrouter.ai](https://openrouter.ai) — sign up, get **$5 free credit**
+2. Copy your key from [openrouter.ai/keys](https://openrouter.ai/keys)
+3. Add to `.claude/settings.local.json`:
+
+```json
+{
+  "env": {
+    "OPENROUTER_API_KEY": "sk-or-v1-your-key-here"
+  }
+}
+```
+
+---
+
+## Generate Stickers
+
+Tell Claude Code:
+
+> **"generate stickers for my buddy"**
+
+Or via CLI:
 
 ```bash
-export OPENROUTER_API_KEY="sk-or-v1-your-key-here"
-python3 scripts/buddy_generate.py --info
+# Check your buddy
+python3 .claude/scripts/buddy_generate.py --info
+
+# Generate all 12 stickers
+OPENROUTER_API_KEY="..." python3 .claude/scripts/buddy_generate.py --all --no-send
 ```
 
-You'll see something like:
-```
-Name: Wobble
-Species: chonk
-Emotions (12): zen, bug, sarcasm, chaos, approve, vibrate, meditate, deadline, facepalm, sleep, itworks, hug
-```
-
-### Step 5. Generate your stickers
-
-```bash
-python3 scripts/buddy_generate.py --all --no-send
-```
-
-Done! Your stickers are in `~/.claude/buddy-stickers/<buddy-name>/`.
+Stickers saved to `~/.claude/buddy-stickers/<buddy-name>/`.
 
 ---
 
