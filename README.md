@@ -25,23 +25,40 @@ Each species has its own emotions. A Goose gets `honk`, `steal`, `chase`. A Cat 
 
 ## Install
 
-### As Claude Code Plugin
-
-```
-claude plugin add github:Voronik1801/claude-buddy-stickers
-```
-
-On first enable, Claude Code will prompt you for:
-- **OpenRouter API key** — for image generation ([openrouter.ai](https://openrouter.ai), free $5 credit on signup)
-- **Telegram Bot token** — optional, for creating sticker packs (from [@BotFather](https://t.me/BotFather))
-- **Telegram chat** — optional, where to send stickers
-
-### Manual install
+### Clone and copy to your project
 
 ```bash
 git clone https://github.com/Voronik1801/claude-buddy-stickers.git
+cd claude-buddy-stickers
 pip install httpx telethon Pillow
 ```
+
+Copy skill and scripts to your Claude Code project:
+
+```bash
+# Skill (enables /buddy-stickers:sticker-pack command)
+mkdir -p .claude/skills/sticker-pack
+cp skills/sticker-pack/SKILL.md .claude/skills/sticker-pack/
+
+# Scripts
+mkdir -p .claude/scripts
+cp scripts/buddy_generate.py .claude/scripts/
+cp scripts/buddy_react.py .claude/scripts/
+```
+
+Set your API keys in `.claude/settings.local.json`:
+```json
+{
+  "env": {
+    "OPENROUTER_API_KEY": "sk-or-v1-your-key-here",
+    "TELEGRAM_BOT_TOKEN": "123456:ABC-your-token"
+  }
+}
+```
+
+Get keys:
+- **OpenRouter** — [openrouter.ai](https://openrouter.ai) (free $5 credit on signup)
+- **Telegram Bot** — [@BotFather](https://t.me/BotFather) (optional, for sticker packs)
 
 ## Usage
 
